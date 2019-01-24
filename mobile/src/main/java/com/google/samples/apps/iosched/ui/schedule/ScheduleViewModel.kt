@@ -218,16 +218,16 @@ class ScheduleViewModel @Inject constructor(
 
         isLoading = loadSessionsResult.map { it == Result.Loading }
 
-        _errorMessage.addSource(loadSessionsResult, { result ->
+        _errorMessage.addSource(loadSessionsResult) { result ->
             if (result is Result.Error) {
                 _errorMessage.value = Event(content = result.exception.message ?: "Error")
             }
-        })
-        _errorMessage.addSource(loadEventFiltersResult, { result ->
+        }
+        _errorMessage.addSource(loadEventFiltersResult) { result ->
             if (result is Result.Error) {
                 _errorMessage.value = Event(content = result.exception.message ?: "Error")
             }
-        })
+        }
 
         agenda = loadAgendaResult.map {
             (it as? Result.Success)?.data ?: emptyList()
@@ -316,47 +316,47 @@ class ScheduleViewModel @Inject constructor(
             }
         }
 
-        _sessionTimeDataDay1.addSource(timeZoneId, {
+        _sessionTimeDataDay1.addSource(timeZoneId) {
             _sessionTimeDataDay1.value = _sessionTimeDataDay1.value?.apply {
                 timeZoneId = it
             } ?: SessionTimeData(timeZoneId = it)
-        })
-        _sessionTimeDataDay1.addSource(loadSessionsResult, {
+        }
+        _sessionTimeDataDay1.addSource(loadSessionsResult) {
             val userSessions =
-                (it as? Result.Success)?.data?.userSessionsPerDay?.get(ConferenceDays[0])
-                    ?: return@addSource
+                    (it as? Result.Success)?.data?.userSessionsPerDay?.get(ConferenceDays[0])
+                            ?: return@addSource
             _sessionTimeDataDay1.value = _sessionTimeDataDay1.value?.apply {
                 list = userSessions
             } ?: SessionTimeData(list = userSessions)
-        })
+        }
 
-        _sessionTimeDataDay2.addSource(timeZoneId, {
+        _sessionTimeDataDay2.addSource(timeZoneId) {
             _sessionTimeDataDay2.value = _sessionTimeDataDay2.value?.apply {
                 timeZoneId = it
             } ?: SessionTimeData(timeZoneId = it)
-        })
-        _sessionTimeDataDay2.addSource(loadSessionsResult, {
+        }
+        _sessionTimeDataDay2.addSource(loadSessionsResult) {
             val userSessions =
-                (it as? Result.Success)?.data?.userSessionsPerDay?.get(ConferenceDays[1])
-                    ?: return@addSource
+                    (it as? Result.Success)?.data?.userSessionsPerDay?.get(ConferenceDays[1])
+                            ?: return@addSource
             _sessionTimeDataDay2.value = _sessionTimeDataDay2.value?.apply {
                 list = userSessions
             } ?: SessionTimeData(list = userSessions)
-        })
+        }
 
-        _sessionTimeDataDay3.addSource(timeZoneId, {
+        _sessionTimeDataDay3.addSource(timeZoneId) {
             _sessionTimeDataDay3.value = _sessionTimeDataDay3.value?.apply {
                 timeZoneId = it
             } ?: SessionTimeData(timeZoneId = it)
-        })
-        _sessionTimeDataDay3.addSource(loadSessionsResult, {
+        }
+        _sessionTimeDataDay3.addSource(loadSessionsResult) {
             val userSessions =
-                (it as? Result.Success)?.data?.userSessionsPerDay?.get(ConferenceDays[2])
-                    ?: return@addSource
+                    (it as? Result.Success)?.data?.userSessionsPerDay?.get(ConferenceDays[2])
+                            ?: return@addSource
             _sessionTimeDataDay3.value = _sessionTimeDataDay3.value?.apply {
                 list = userSessions
             } ?: SessionTimeData(list = userSessions)
-        })
+        }
 
         swipeRefreshing = swipeRefreshResult.map {
             // Whenever refresh finishes, stop the indicator, whatever the result
